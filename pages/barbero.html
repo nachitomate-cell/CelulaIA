@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel Barbero — Elegance</title>
+  <link rel="stylesheet" href="../css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    .panel-wrap { max-width:600px; margin:0 auto; padding:32px 20px 80px; }
+    .login-card { background:var(--gray-100); border:0.5px solid var(--gray-300); border-radius:var(--radius-lg); padding:32px; max-width:360px; margin:60px auto; }
+    .login-card h2 { text-align:center; margin-bottom:24px; }
+
+    .agenda-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+    .agenda-header h2 { margin-bottom:0; }
+    .logout-btn { font-size:11px; color:var(--gray-500); cursor:pointer; letter-spacing:1px; text-transform:uppercase; background:none; border:none; }
+
+    .appointment-card { background:var(--gray-100); border:0.5px solid var(--gray-300); border-radius:var(--radius-lg); padding:16px 18px; margin-bottom:10px; }
+    .appt-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+    .appt-client { font-size:15px; font-weight:500; color:var(--white); }
+    .appt-meta { font-size:12px; color:var(--gray-500); margin-top:2px; }
+    .appt-status { font-size:10px; padding:3px 8px; border-radius:var(--radius-full); letter-spacing:1px; text-transform:uppercase; }
+    .appt-status.pending { background:rgba(245,166,35,0.15); color:var(--warn); border:0.5px solid rgba(245,166,35,0.3); }
+    .appt-status.confirmed { background:rgba(90,180,245,0.15); color:var(--info); border:0.5px solid rgba(90,180,245,0.3); }
+    .appt-status.sealed { background:rgba(245,244,240,0.1); color:var(--white); border:0.5px solid var(--white); }
+    .appt-status.blocked { background:rgba(229,83,83,0.15); color:var(--danger); border:0.5px solid rgba(229,83,83,0.3); }
+
+    .appt-actions { display:flex; gap:6px; margin-top:10px; }
+    .appt-btn { flex:1; padding:8px 4px; border-radius:var(--radius-md); font-size:11px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; font-family:var(--font-body); border:0.5px solid; transition:all 180ms; }
+    .appt-btn.confirm { border-color:var(--info); color:var(--info); background:transparent; }
+    .appt-btn.confirm:hover { background:rgba(90,180,245,0.1); }
+    .appt-btn.reject { border-color:var(--danger); color:var(--danger); background:transparent; }
+    .appt-btn.reject:hover { background:rgba(229,83,83,0.1); }
+    .appt-btn.block { border-color:var(--warn); color:var(--warn); background:transparent; }
+    .appt-btn.block:hover { background:rgba(245,166,35,0.1); }
+    .appt-btn.seal { border-color:var(--white); color:var(--white); background:transparent; }
+    .appt-btn.seal:hover { background:rgba(245,244,240,0.08); }
+    .appt-btn:disabled { opacity:0.3; cursor:not-allowed; }
+
+    .empty-state { text-align:center; padding:40px 20px; color:var(--gray-500); font-size:14px; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="../index.html" class="logo">
+      <span class="logo-text">ELEG<span class="logo-dot"></span>NCE</span>
+      <span class="logo-sub">BARBERSHOP</span>
+    </a>
+    <nav class="nav">
+      <a href="../index.html" class="nav-link">Reservar</a>
+      <a href="club.html" class="nav-link">Mi Club</a>
+      <a href="barbero.html" class="nav-link active">Barberos</a>
+    </nav>
+  </header>
+
+  <!-- Login -->
+  <div id="barber-login">
+    <div class="login-card">
+      <h2>Panel Barbero</h2>
+      <div class="form-group"><label>Barbero</label>
+        <select id="barber-select" style="width:100%;background:var(--gray-100);border:0.5px solid var(--gray-300);border-radius:var(--radius-md);padding:12px 14px;font-size:15px;color:var(--white);font-family:var(--font-body);outline:none;">
+          <option value="">Seleccionar barbero</option>
+          <option value="jose">Jose</option>
+          <option value="pedro">Pedro</option>
+          <option value="luigi">Luigi</option>
+          <option value="carlos">Carlos</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Contraseña</label><input type="password" id="barber-pass" placeholder="••••••••" /></div>
+      <button class="btn-primary" onclick="barberLogin()">Ingresar</button>
+    </div>
+  </div>
+
+  <!-- Agenda Panel -->
+  <div id="barber-panel" class="panel-wrap hidden">
+    <div class="agenda-header">
+      <h2>Agenda — <span id="barber-panel-name">—</span></h2>
+      <button class="logout-btn" onclick="barberLogout()">Salir</button>
+    </div>
+    <div id="appointments-list"></div>
+  </div>
+
+  <footer class="footer">
+    <p>Desarrollado en Valparaíso con ☕ por <strong>SinapTech Spa</strong></p>
+  </footer>
+
+  <script src="../js/barbero.js"></script>
+</body>
+</html>

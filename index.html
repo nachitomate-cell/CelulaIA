@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Elegance Barbershop — Reserva tu hora</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <span class="logo-text">ELEG<span class="logo-dot"></span>NCE</span>
+      <span class="logo-sub">BARBERSHOP</span>
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="nav-link active">Reservar</a>
+      <a href="pages/club.html" class="nav-link">Mi Club</a>
+      <a href="pages/barbero.html" class="nav-link">Barberos</a>
+    </nav>
+  </header>
+
+  <main class="booking-main">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="step active" data-step="1">Servicio</div>
+      <div class="step" data-step="2">Barbero</div>
+      <div class="step" data-step="3">Fecha</div>
+      <div class="step" data-step="4">Contacto</div>
+      <div class="step" data-step="5">Confirmar</div>
+    </div>
+
+    <!-- Step 1: Services -->
+    <section class="booking-step active" id="step-1">
+      <h2>Elige tu Servicio</h2>
+      <div class="tabs">
+        <button class="tab active" data-category="cortes">Cortes</button>
+        <button class="tab" data-category="barba">Barba</button>
+        <button class="tab" data-category="combos">Combos</button>
+        <button class="tab" data-category="extras">Extras</button>
+      </div>
+      <div class="services-grid" id="services-grid">
+        <div class="service-card" data-id="corte-clasico" data-price="2990" data-name="Corte Clásico">
+          <div class="service-icon">✂</div>
+          <div class="service-name">Corte Clásico</div>
+          <div class="service-price">$2.990</div>
+        </div>
+        <div class="service-card" data-id="corte-fade" data-price="3990" data-name="Fade Premium">
+          <div class="service-icon">💈</div>
+          <div class="service-name">Fade Premium</div>
+          <div class="service-price">$3.990</div>
+        </div>
+        <div class="service-card" data-id="barba" data-price="2500" data-name="Perfilado de Barba" data-category="barba">
+          <div class="service-icon">🪒</div>
+          <div class="service-name">Perfilado de Barba</div>
+          <div class="service-price">$2.500</div>
+        </div>
+        <div class="service-card" data-id="combo" data-price="5990" data-name="Combo Corte + Barba" data-category="combos">
+          <div class="service-icon">✨</div>
+          <div class="service-name">Combo Corte + Barba</div>
+          <div class="service-price">$5.990</div>
+        </div>
+      </div>
+      <button class="btn-primary" id="step1-next" disabled>Siguiente</button>
+    </section>
+
+    <!-- Step 2: Barber -->
+    <section class="booking-step" id="step-2">
+      <h2>Selecciona tu Barbero</h2>
+      <div class="barbers-grid">
+        <div class="barber-card" data-id="jose" data-name="Jose">
+          <div class="barber-avatar">JO</div>
+          <div class="barber-name">Jose</div>
+          <div class="barber-spec">Especialista en Fades</div>
+        </div>
+        <div class="barber-card" data-id="pedro" data-name="Pedro">
+          <div class="barber-avatar">PE</div>
+          <div class="barber-name">Pedro</div>
+          <div class="barber-spec">Clásicos & Pompadour</div>
+        </div>
+        <div class="barber-card" data-id="luigi" data-name="Luigi">
+          <div class="barber-avatar">LU</div>
+          <div class="barber-name">Luigi</div>
+          <div class="barber-spec">Texturas & Diseños</div>
+        </div>
+        <div class="barber-card" data-id="carlos" data-name="Carlos">
+          <div class="barber-avatar">CA</div>
+          <div class="barber-name">Carlos</div>
+          <div class="barber-spec">Barba & Afeitado</div>
+        </div>
+        <div class="barber-card barber-any" data-id="cualquiera" data-name="Cualquiera">
+          <div class="barber-avatar any">👥</div>
+          <div class="barber-name">Cualquiera</div>
+          <div class="barber-spec">Primer disponible</div>
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-secondary" onclick="goToStep(1)">Atrás</button>
+        <button class="btn-primary" id="step2-next" disabled>Siguiente</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Date & Time -->
+    <section class="booking-step" id="step-3">
+      <h2>Fecha &amp; Hora</h2>
+      <div class="date-carousel" id="date-carousel"></div>
+      <div class="time-grid" id="time-grid"></div>
+      <div class="step-nav">
+        <button class="btn-secondary" onclick="goToStep(2)">Atrás</button>
+        <button class="btn-primary" id="step3-next" disabled>Siguiente</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Contact -->
+    <section class="booking-step" id="step-4">
+      <h2>Tus Datos</h2>
+      <div class="form-group">
+        <label>Nombre</label>
+        <input type="text" id="contact-name" placeholder="Tu nombre" />
+      </div>
+      <div class="form-group">
+        <label>Apellido</label>
+        <input type="text" id="contact-surname" placeholder="Tu apellido" />
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <div class="phone-input">
+          <span class="phone-prefix">+569</span>
+          <input type="tel" id="contact-phone" placeholder=".... ...." maxlength="8" />
+        </div>
+      </div>
+      <div class="step-nav">
+        <button class="btn-secondary" onclick="goToStep(3)">Atrás</button>
+        <button class="btn-primary" id="step4-next">Confirmar</button>
+      </div>
+    </section>
+
+    <!-- Step 5: Confirmation -->
+    <section class="booking-step" id="step-5">
+      <div class="confirm-header">
+        <h2>¡Listo, <span id="confirm-name">Cliente</span>!</h2>
+      </div>
+      <div class="confirm-card">
+        <div class="confirm-row"><span class="confirm-icon">📅</span><span id="confirm-datetime">—</span></div>
+        <div class="confirm-row"><span class="confirm-icon">📍</span><span>Ecuador 243, Viña del Mar</span></div>
+        <div class="confirm-row"><span class="confirm-icon">💈</span><span id="confirm-service">—</span></div>
+        <div class="confirm-row"><span class="confirm-icon">👤</span><span id="confirm-barber">—</span></div>
+      </div>
+      <p class="confirm-msg">
+        Tu hora ya se encuentra agendada en nuestro servicio, aprovecha de visitar nuestras redes
+        sociales: <a href="#" class="link-white">elegance.cl_</a> , únete a nuestro club de fidelidad para
+        optar por descuentos exclusivos y premios.
+      </p>
+      <p class="slogan">No es un corte, es elegancia que te mereces.</p>
+      <div class="confirm-actions">
+        <a href="pages/club.html" class="btn-primary">Unirse al Club</a>
+        <a href="#" class="btn-secondary">Visitar Redes</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Desarrollado en Valparaíso con ☕ por <strong>SinapTech Spa</strong></p>
+  </footer>
+
+  <script src="js/booking.js"></script>
+</body>
+</html>
