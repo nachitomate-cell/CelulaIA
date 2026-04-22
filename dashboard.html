@@ -2,23 +2,50 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#050505">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a">
   <title>Club Elegance | Dashboard</title>
   <link rel="manifest" href="/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link href="/output.css" rel="stylesheet">
   <script src="config.js"></script>
   <script src="db.js"></script>
   <style>
-    body { background-color:#050505; color:#f8fafc; overscroll-behavior-y:none; -webkit-tap-highlight-color:transparent; }
-    .text-neon { color:#fff; text-shadow:0 0 5px rgba(255,255,255,0.4),0 0 10px rgba(255,255,255,0.2); }
-    .border-neon { border-color:#fff; box-shadow:0 0 6px rgba(255,255,255,0.2),inset 0 0 6px rgba(255,255,255,0.05); }
+    :root {
+      --bg: #0a0a0a;
+      --text: #f5f4f0;
+      --muted: rgba(245, 244, 240, 0.6);
+      --line: rgba(245, 244, 240, 0.15);
+      --font-serif: 'Cormorant Garamond', serif;
+      --font-sans: 'DM Sans', sans-serif;
+      --safe-area-bottom: env(safe-area-inset-bottom, 20px);
+    }
+    body {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .text-neon { color: var(--text); text-shadow: none; }
+    .border-neon { border-color: var(--text); box-shadow: none; }
     .no-scrollbar::-webkit-scrollbar { display:none; }
     .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+    h1.text-neon, h2.text-neon { font-family: var(--font-serif); font-weight: 700; letter-spacing: 2px; text-shadow: none; }
   </style>
 </head>
 <body class="font-sans antialiased min-h-screen">
