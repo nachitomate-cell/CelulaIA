@@ -1,0 +1,10 @@
+{
+  "name": "Elegance Barbershop | Reservas",
+  "short_name": "ELEGANCE",
+  "description": "Reserva tu hora en Elegance Barbershop",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
+  "orientation": "portrait"
+}

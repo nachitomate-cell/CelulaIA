@@ -1,0 +1,13 @@
+{
+  "name": "plantilla",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plantilla base de reservas y fidelización para barberías. Demo rebrandeada para Elegance Barbershop.",
+  "scripts": {
+    "dev": "serve . -p 3000 --no-clipboard",
+    "start": "serve . -p 3000"
+  },
+  "devDependencies": {
+    "serve": "^14.2.3"
+  }
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#050505">
+  <title>Club Elegance | Registro</title>
+  <meta name="description" content="Únete al Club Elegance.">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="/output.css" rel="stylesheet">
+  <script src="config.js"></script>
+  <script src="db.js"></script>
+  <style>
+    body { background-color:#050505; color:#f8fafc; overscroll-behavior-y:none; -webkit-tap-highlight-color:transparent; }
+    .text-neon { color:#fff; text-shadow:0 0 5px rgba(255,255,255,0.4),0 0 10px rgba(255,255,255,0.2); }
+    .border-neon { border-color:#fff; box-shadow:0 0 6px rgba(255,255,255,0.2),inset 0 0 6px rgba(255,255,255,0.05); }
+    input:-webkit-autofill { -webkit-box-shadow:0 0 0 100px #111115 inset !important; -webkit-text-fill-color:#f8fafc !important; }
+    .tab-btn.active { color:#fff; border-color:rgba(255,255,255,0.6); }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col items-center justify-center px-6 py-12">
+  <div class="w-full max-w-sm animate-[fadeSlideUp_0.5s_cubic-bezier(0.16,1,0.3,1)_forwards]">
+    <div class="flex flex-col items-center mb-10">
+      <div class="w-20 h-20 rounded-full bg-zinc-800 border-2 border-white shadow-[0_0_25px_rgba(255,255,255,0.3)] mb-5"></div>
+      <h1 class="text-3xl font-bold tracking-tight text-neon text-center">Únete al Club</h1>
+      <p class="text-sm text-gray-400 mt-2 text-center leading-relaxed">
+        Únete al Club. Acumula sellos y gana cortes gratis.<br>Solo en ELEGANCE Barbershop.
+      </p>
+    </div>
+
+    <div class="flex mb-8 border-b border-white/10">
+      <button id="tabLogin" class="tab-btn active flex-1 pb-3 text-sm font-bold text-center border-b-2 border-white/60 uppercase tracking-widest" onclick="switchTab('login')">Iniciar Sesión</button>
+      <button id="tabRegister" class="tab-btn flex-1 pb-3 text-sm font-bold text-center border-b-2 border-transparent text-gray-500 uppercase tracking-widest" onclick="switchTab('register')">Crear Cuenta</button>
+    </div>
+
+    <div id="alertBanner" class="hidden mb-5 px-4 py-3 rounded-xl border text-sm font-medium text-center"></div>
+
+    <div id="panelLogin">
+      <div class="space-y-4">
+        <input type="email" id="loginEmail" placeholder="Correo electrónico" class="w-full bg-brand-card border border-white/15 rounded-2xl px-5 py-4 text-brand-text text-base font-medium focus:outline-none focus:border-white/60 placeholder-gray-600">
+        <input type="password" id="loginPassword" placeholder="Contraseña" class="w-full bg-brand-card border border-white/15 rounded-2xl px-5 py-4 text-brand-text text-base font-medium focus:outline-none focus:border-white/60 placeholder-gray-600">
+      </div>
+      <button onclick="loginWithEmail()" class="mt-6 w-full bg-white/5 border-2 border-neon text-neon font-bold py-4 rounded-[2rem] shadow-[0_0_18px_rgba(255,255,255,0.12)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base hover:bg-white/10">
+        <i class="ph-bold ph-sign-in text-lg"></i> Ingresar
+      </button>
+    </div>
+
+    <div id="panelRegister" class="hidden">
+      <div class="space-y-4">
+        <input type="text" id="regNombre" placeholder="Nombre completo" class="w-full bg-brand-card border border-white/15 rounded-2xl px-5 py-4 text-brand-text text-base font-medium focus:outline-none focus:border-white/60 placeholder-gray-600">
+        <input type="email" id="regEmail" placeholder="Correo electrónico" class="w-full bg-brand-card border border-white/15 rounded-2xl px-5 py-4 text-brand-text text-base font-medium focus:outline-none focus:border-white/60 placeholder-gray-600">
+        <input type="tel" id="regTelefono" placeholder="+56 9 1234 5678" class="w-full bg-brand-card border border-white/15 rounded-2xl px-5 py-4 text-brand-text text-base font-medium focus:outline-none focus:border-white/60 placeholder-gray-600">
+        <input type="password" id="regPassword" placeholder="Contraseña (mín. 6 caracteres)" class="w-full bg-brand-card border border-white/15 rounded-2xl px-5 py-4 text-brand-text text-base font-medium focus:outline-none focus:border-white/60 placeholder-gray-600">
+      </div>
+      <button onclick="registerWithEmail()" class="mt-6 w-full bg-white/5 border-2 border-neon text-neon font-bold py-4 rounded-[2rem] shadow-[0_0_18px_rgba(255,255,255,0.12)] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-base hover:bg-white/10">
+        <i class="ph-bold ph-user-plus text-lg"></i> Crear cuenta
+      </button>
+    </div>
+
+    <p class="text-center text-xs text-gray-600 mt-8">
+      <a href="index.html" class="hover:text-gray-400 transition-colors flex items-center justify-center gap-1">
+        <i class="ph ph-arrow-left text-sm"></i> Volver a Agendar
+      </a>
+    </p>
+  </div>
+
+  <script>
+    function showAlert(msg, ok = false) {
+      const el = document.getElementById('alertBanner');
+      el.textContent = msg;
+      el.className = `mb-5 px-4 py-3 rounded-xl border text-sm font-medium text-center ${ok ? 'bg-white/5 border-white/20 text-white' : 'bg-red-950/40 border-red-500/30 text-red-300'}`;
+      el.classList.remove('hidden');
+    }
+
+    function switchTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('panelLogin').classList.toggle('hidden', !isLogin);
+      document.getElementById('panelRegister').classList.toggle('hidden', isLogin);
+      document.getElementById('tabLogin').className = `tab-btn ${isLogin ? 'active' : 'text-gray-500'} flex-1 pb-3 text-sm font-bold text-center border-b-2 ${isLogin ? 'border-white/60' : 'border-transparent'} uppercase tracking-widest`;
+      document.getElementById('tabRegister').className = `tab-btn ${!isLogin ? 'active' : 'text-gray-500'} flex-1 pb-3 text-sm font-bold text-center border-b-2 ${!isLogin ? 'border-white/60' : 'border-transparent'} uppercase tracking-widest`;
+      document.getElementById('alertBanner').classList.add('hidden');
+    }
+
+    function loginWithEmail() {
+      const user = DemoDB.login(
+        document.getElementById('loginEmail').value.trim(),
+        document.getElementById('loginPassword').value
+      );
+      if (!user) return showAlert('Correo o contraseña incorrectos.');
+      showAlert('Ingreso correcto. Redirigiendo...', true);
+      setTimeout(() => window.location.href = 'dashboard.html', 500);
+    }
+
+    function registerWithEmail() {
+      const nombre = document.getElementById('regNombre').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const telefono = document.getElementById('regTelefono').value.trim();
+      const password = document.getElementById('regPassword').value;
+      if (!nombre || !email || !telefono || password.length < 6) {
+        return showAlert('Completa todos los campos y usa una contraseña de al menos 6 caracteres.');
+      }
+      DemoDB.upsertUser({ nombre, email, telefono, password, stamps: 0 });
+      showAlert('Cuenta creada. Redirigiendo...', true);
+      setTimeout(() => window.location.href = 'dashboard.html', 500);
+    }
+  </script>
+</body>
+</html>

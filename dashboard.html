@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#050505">
+  <title>Club Elegance | Dashboard</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link href="/output.css" rel="stylesheet">
+  <script src="config.js"></script>
+  <script src="db.js"></script>
+  <style>
+    body { background-color:#050505; color:#f8fafc; overscroll-behavior-y:none; -webkit-tap-highlight-color:transparent; }
+    .text-neon { color:#fff; text-shadow:0 0 5px rgba(255,255,255,0.4),0 0 10px rgba(255,255,255,0.2); }
+    .border-neon { border-color:#fff; box-shadow:0 0 6px rgba(255,255,255,0.2),inset 0 0 6px rgba(255,255,255,0.05); }
+    .no-scrollbar::-webkit-scrollbar { display:none; }
+    .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+  </style>
+</head>
+<body class="font-sans antialiased min-h-screen">
+  <div class="fixed inset-0 bg-[#050505] flex flex-col items-center justify-center z-50 hidden" id="authGuard">
+    <div class="w-10 h-10 border-2 border-white/20 border-t-white rounded-full animate-spin mb-4"></div>
+    <span class="text-xs text-gray-500">Cargando...</span>
+  </div>
+
+  <div class="max-w-md mx-auto relative pb-44">
+    <header class="px-6 pt-8 pb-5 flex items-center justify-between sticky top-0 bg-[#050505]/95 backdrop-blur-md z-30 border-b border-white/5">
+      <div class="w-9 h-9 rounded-full bg-zinc-800 border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.15)]"></div>
+      <div class="text-center">
+        <h1 class="text-base font-bold text-neon tracking-tight leading-none">Club Elegance</h1>
+        <p class="text-[11px] text-gray-500 mt-0.5" id="headerGreeting">Hola</p>
+      </div>
+      <div class="w-9 h-9 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center overflow-hidden">
+        <i class="ph-fill ph-user text-gray-500 text-lg"></i>
+      </div>
+    </header>
+
+    <section id="tabLoyalty" class="tab-panel px-5 pt-6 animate-[fadeSlideUp_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards]">
+      <div class="relative rounded-3xl border border-neon bg-[#0a0a0d] p-6 shadow-[0_0_30px_rgba(255,255,255,0.08)] overflow-hidden mb-6">
+        <div class="absolute -top-12 -right-12 w-40 h-40 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="flex items-start justify-between mb-5">
+          <div>
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Tarjeta de Fidelización</p>
+            <h2 class="text-xl font-bold text-neon">Elegance Barbershop</h2>
+          </div>
+          <div class="flex flex-col items-end">
+            <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Sellos</span>
+            <span id="stampsCount" class="text-3xl font-bold text-neon leading-none">0<span class="text-base text-white/40">/10</span></span>
+          </div>
+        </div>
+        <div id="stampsGrid" class="grid grid-cols-5 gap-3 mb-5"></div>
+        <div class="w-full bg-white/5 rounded-full h-1.5 overflow-hidden border border-white/5">
+          <div id="stampsBar" class="h-1.5 rounded-full bg-white transition-all duration-700 shadow-[0_0_8px_rgba(255,255,255,0.5)]" style="width:0%"></div>
+        </div>
+        <p id="stampsMsg" class="text-[11px] text-gray-500 mt-2 text-right font-medium"></p>
+      </div>
+
+      <div class="mb-6 bg-brand-card rounded-2xl border border-white/8 px-5 py-4 flex items-center gap-4">
+        <div class="w-11 h-11 rounded-full bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+          <i class="ph-fill ph-trophy text-white text-xl drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]"></i>
+        </div>
+        <div>
+          <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Próximo premio</p>
+          <p id="nextRewardText" class="text-sm font-bold text-brand-text mt-0.5">Cargando...</p>
+        </div>
+      </div>
+
+      <h3 class="text-xs font-bold text-white/40 uppercase tracking-widest mb-3 px-1">Tabla de Premios</h3>
+      <div id="premiosList" class="space-y-2.5"></div>
+
+      <p class="text-[11px] text-gray-600 text-center mt-5 leading-relaxed">
+        Cada visita a la barbería suma un sello.<br>Tu barbero lo registra al terminar el corte.
+      </p>
+    </section>
+
+    <section id="tabLookbook" class="tab-panel hidden px-5 pt-6 animate-[fadeSlideUp_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards]">
+      <div class="mb-5">
+        <h2 class="text-2xl font-bold text-neon tracking-tight">Lookbook</h2>
+        <p class="text-sm text-gray-500 mt-1">Referencias visuales placeholder para la presentación.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="aspect-[3/4] rounded-2xl bg-zinc-800 border border-white/8"></div>
+        <div class="aspect-[4/5] rounded-2xl bg-zinc-800 border border-white/8"></div>
+        <div class="aspect-square rounded-2xl bg-zinc-800 border border-white/8"></div>
+        <div class="aspect-[3/4] rounded-2xl bg-zinc-800 border border-white/8"></div>
+      </div>
+    </section>
+
+    <section id="tabProfile" class="tab-panel hidden px-5 pt-6 animate-[fadeSlideUp_0.45s_cubic-bezier(0.16,1,0.3,1)_forwards]">
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-20 h-20 rounded-full bg-zinc-800 border-2 border-neon shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center justify-center overflow-hidden mb-4">
+          <i class="ph-fill ph-user text-4xl text-gray-500"></i>
+        </div>
+        <h2 id="profileName" class="text-xl font-bold text-neon tracking-tight">—</h2>
+        <p id="profileEmail" class="text-sm text-gray-500 mt-0.5">—</p>
+        <div class="flex items-center gap-2 mt-3">
+          <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-full px-3 py-1.5">
+            <i class="ph-fill ph-medal text-sm text-white/60"></i>
+            <span id="profileStamps" class="text-xs font-bold text-white/60">0 sellos</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-3 px-1">Mi Cuenta</h3>
+      <div class="space-y-3 mb-5">
+        <div class="bg-brand-card rounded-2xl border border-white/8 px-5 py-3">
+          <label class="text-[10px] text-gray-600 font-bold uppercase tracking-widest block mb-1">Nombre</label>
+          <div class="flex items-center gap-2">
+            <i class="ph-fill ph-user text-gray-500 text-base flex-shrink-0"></i>
+            <input id="editNombre" type="text" class="flex-1 bg-transparent text-sm font-semibold text-brand-text outline-none placeholder-gray-600 min-w-0">
+          </div>
+        </div>
+        <div class="bg-brand-card rounded-2xl border border-white/8 px-5 py-3">
+          <label class="text-[10px] text-gray-600 font-bold uppercase tracking-widest block mb-1">Correo</label>
+          <div class="flex items-center gap-2">
+            <i class="ph-fill ph-envelope text-gray-500 text-base flex-shrink-0"></i>
+            <input id="editEmail" type="email" class="flex-1 bg-transparent text-sm font-semibold text-brand-text outline-none placeholder-gray-600 min-w-0">
+          </div>
+        </div>
+        <div class="bg-brand-card rounded-2xl border border-white/8 px-5 py-3">
+          <label class="text-[10px] text-gray-600 font-bold uppercase tracking-widest block mb-1">Teléfono</label>
+          <div class="flex items-center gap-2">
+            <i class="ph-fill ph-phone text-gray-500 text-base flex-shrink-0"></i>
+            <input id="editTelefono" type="tel" class="flex-1 bg-transparent text-sm font-semibold text-brand-text outline-none placeholder-gray-600 min-w-0">
+          </div>
+        </div>
+      </div>
+      <button onclick="guardarPerfil()" class="w-full bg-white/5 border border-neon text-neon font-bold py-3.5 rounded-2xl text-sm active:scale-[0.99] transition-all hover:bg-white/10 mb-6 flex items-center justify-center gap-2">
+        <i class="ph-bold ph-floppy-disk text-base"></i> Guardar cambios
+      </button>
+    </section>
+  </div>
+
+  <div class="fixed bottom-[4.5rem] left-0 right-0 z-40 flex justify-center pointer-events-none px-5">
+    <a href="index.html" class="pointer-events-auto flex items-center gap-2 bg-white text-[#050505] font-bold px-7 py-3.5 rounded-[2rem] shadow-[0_0_30px_rgba(255,255,255,0.35),0_4px_20px_rgba(0,0,0,0.6)] active:scale-[0.97] transition-all text-base">
+      <i class="ph-bold ph-calendar-plus text-lg"></i>
+      Agendar Hora
+    </a>
+  </div>
+
+  <nav class="fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0d]/95 backdrop-blur-xl border-t border-white/8" style="padding-bottom: env(safe-area-inset-bottom);">
+    <div class="max-w-md mx-auto flex items-stretch">
+      <button class="nav-tab active flex-1 flex flex-col items-center justify-center gap-1 py-3.5 px-2" onclick="switchTab('loyalty')" id="navLoyalty">
+        <i class="nav-icon ph-fill ph-medal text-2xl transition-all text-white"></i>
+        <span class="nav-label text-[10px] font-bold uppercase tracking-widest transition-all text-white">Fidelización</span>
+      </button>
+      <button class="nav-tab flex-1 flex flex-col items-center justify-center gap-1 py-3.5 px-2" onclick="switchTab('lookbook')" id="navLookbook">
+        <i class="nav-icon ph-fill ph-images text-2xl transition-all text-gray-500"></i>
+        <span class="nav-label text-[10px] font-bold uppercase tracking-widest transition-all text-gray-500">Lookbook</span>
+      </button>
+      <button class="nav-tab flex-1 flex flex-col items-center justify-center gap-1 py-3.5 px-2" onclick="switchTab('profile')" id="navProfile">
+        <i class="nav-icon ph-fill ph-user-circle text-2xl transition-all text-gray-500"></i>
+        <span class="nav-label text-[10px] font-bold uppercase tracking-widest transition-all text-gray-500">Mi Perfil</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    let activeTab = 'loyalty';
+    const currentUser = DemoDB.getCurrentUser();
+    const rewards = DemoDB.getRewards();
+    let userStamps = Number(currentUser?.stamps || 0);
+
+    function renderStamps() {
+      const grid = document.getElementById('stampsGrid');
+      grid.innerHTML = '';
+      for (let i = 1; i <= 10; i++) {
+        const filled = i <= userStamps;
+        const cell = document.createElement('div');
+        cell.className = 'aspect-square rounded-xl flex items-center justify-center transition-all ' + (filled
+          ? 'bg-white/10 border border-white/30 shadow-[0_0_10px_rgba(255,255,255,0.15)]'
+          : 'bg-white/3 border border-white/8');
+        cell.innerHTML = filled
+          ? '<i class="ph-fill ph-scissors text-xl text-neon drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"></i>'
+          : `<span class="text-[11px] font-bold text-white/15">${i}</span>`;
+        grid.appendChild(cell);
+      }
+
+      const nextReward = rewards.find((reward) => userStamps < reward.costoSellos);
+      document.getElementById('stampsCount').innerHTML = `${userStamps}<span class="text-base text-white/40">/10</span>`;
+      document.getElementById('stampsBar').style.width = `${Math.min(userStamps * 10, 100)}%`;
+      document.getElementById('stampsMsg').textContent = nextReward
+        ? `${nextReward.costoSellos - userStamps} sellos para: ${nextReward.nombre}`
+        : '¡Ya puedes canjear tu mejor premio!';
+      document.getElementById('nextRewardText').textContent = nextReward
+        ? `${nextReward.costoSellos - userStamps} sellos → ${nextReward.nombre}`
+        : 'Corte gratis disponible';
+    }
+
+    function renderRewards() {
+      document.getElementById('premiosList').innerHTML = rewards.map((reward, index) => `
+        <div class="flex items-center gap-4 bg-brand-card rounded-2xl border border-white/8 px-5 py-4">
+          <span class="text-xl font-black text-neon leading-none">${reward.costoSellos}</span>
+          <div class="w-px h-6 bg-white/10"></div>
+          <div>
+            <p class="text-xs font-bold text-white/40 uppercase tracking-widest">Sellos</p>
+            <p class="text-sm font-bold text-brand-text">${reward.nombre}</p>
+          </div>
+          <i class="ph-fill ${['ph-sparkle','ph-scissors','ph-crown'][index % 3]} text-white/20 ml-auto text-lg"></i>
+        </div>
+      `).join('');
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('tabLoyalty').classList.toggle('hidden', tab !== 'loyalty');
+      document.getElementById('tabLookbook').classList.toggle('hidden', tab !== 'lookbook');
+      document.getElementById('tabProfile').classList.toggle('hidden', tab !== 'profile');
+
+      ['navLoyalty','navLookbook','navProfile'].forEach((id) => {
+        document.getElementById(id).querySelector('.nav-icon').classList.remove('text-white');
+        document.getElementById(id).querySelector('.nav-icon').classList.add('text-gray-500');
+        document.getElementById(id).querySelector('.nav-label').classList.remove('text-white');
+        document.getElementById(id).querySelector('.nav-label').classList.add('text-gray-500');
+      });
+
+      const active = tab === 'loyalty' ? 'navLoyalty' : tab === 'lookbook' ? 'navLookbook' : 'navProfile';
+      document.getElementById(active).querySelector('.nav-icon').classList.remove('text-gray-500');
+      document.getElementById(active).querySelector('.nav-icon').classList.add('text-white');
+      document.getElementById(active).querySelector('.nav-label').classList.remove('text-gray-500');
+      document.getElementById(active).querySelector('.nav-label').classList.add('text-white');
+    }
+
+    function guardarPerfil() {
+      const updated = DemoDB.upsertUser({
+        nombre: document.getElementById('editNombre').value.trim(),
+        email: document.getElementById('editEmail').value.trim(),
+        telefono: document.getElementById('editTelefono').value.trim(),
+        password: currentUser?.password || 'demo123',
+        stamps: userStamps
+      });
+      document.getElementById('profileName').textContent = updated.nombre;
+      document.getElementById('profileEmail').textContent = updated.email;
+      document.getElementById('headerGreeting').textContent = `Hola, ${updated.nombre.split(' ')[0]}`;
+      alert('Perfil demo actualizado.');
+    }
+
+    document.getElementById('headerGreeting').textContent = `Hola, ${(currentUser?.nombre || 'Cliente').split(' ')[0]}`;
+    document.getElementById('profileName').textContent = currentUser?.nombre || 'Cliente Elegance';
+    document.getElementById('profileEmail').textContent = currentUser?.email || 'demo@elegance.local';
+    document.getElementById('profileStamps').textContent = `${userStamps} sellos`;
+    document.getElementById('editNombre').value = currentUser?.nombre || '';
+    document.getElementById('editEmail').value = currentUser?.email || '';
+    document.getElementById('editTelefono').value = currentUser?.telefono || '';
+    renderStamps();
+    renderRewards();
+  </script>
+</body>
+</html>
